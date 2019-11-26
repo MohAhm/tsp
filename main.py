@@ -18,8 +18,6 @@ def main():
     for i, axis in enumerate(data, 1):
         cities.append(City(i, axis[0], axis[1]))
 
-    # print(cities[1].x, cities[1].y)
-
     # 2 Create GA object
     ga = GeneticAlgorithm(50, 0.01, 0.8, 0)
 
@@ -27,7 +25,7 @@ def main():
     initial_population = ga.init_population(len(data))
     for individual in initial_population.population:
         route = Route(individual, cities)
-        print('Route: ', route)
+        print('Route: ', route, ' [Total distance]: ', route.get_distance())
 
 
 if __name__ == '__main__':

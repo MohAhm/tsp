@@ -23,8 +23,11 @@ print('Individual chromosome: ', individual.chromosome)
 route = Route(individual, cities)
 print('Route Test: ', route.route)
 
-for city in route.route:
+for i, city in enumerate(route.route):
+    # print(i)
     print(city.x, city.y)
+
+print('Total Distance: ', route.get_distance())
 
 
 initial_population = Population(10, len(data))
