@@ -1,5 +1,5 @@
 from city import City
-from individual import Individual
+from chromosome import Chromosome
 from population import Population
 from route import Route
 
@@ -16,26 +16,26 @@ for i, axis in enumerate(data, 1):
 print('List of cities: ', cities)
 
 
-individual = Individual(len(data))
-print('Individual chromosome: ', individual.chromosome)
+chromosome = Chromosome(len(data))
+print('Chromosome: ', chromosome.get_chromosome())
 
 
-route = Route(individual, cities)
+route = Route(chromosome, cities)
 print('Route Test: ', route.route)
 
 for i, city in enumerate(route.route):
     # print(i)
+    # print(city, route.route[i + 1])
     print(city.x, city.y)
 
-print('Total Distance: ', route.get_distance())
+print('Total Distance: ', route.total_distance())
 
 
 initial_population = Population(10, len(data))
 # print('Population: ', initial_population.population)
 
-for individual in initial_population.population:
-    # print(individual.chromosome)
-    route = Route(individual, cities)
+for chromosome in initial_population.get_population():
+    route = Route(chromosome, cities)
     print('Route: ', route)
 
 

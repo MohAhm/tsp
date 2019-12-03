@@ -1,22 +1,21 @@
-from individual import Individual
+from chromosome import Chromosome
 from city import City
 
 
 class Route:
-    def __init__(self, individual, cities):
-        chromosome = individual.chromosome
+    def __init__(self, chromosome, cities):
         self.route = []
+        self.distance = 0
 
-        # Build an array of city objects in the order of the
-        # individual’s chromosome
-        for i in range(len(chromosome)):
-            self.route.append(cities[chromosome[i]])
+        # Build an array of city objects in the order
+        # of the chromosome
+        for i in range(len(chromosome.get_chromosome())):
+            self.route.append(cities[chromosome.get_chromosome()[i]])
 
         # Add ending point which is the starting city to the route
         self.route.append(self.route[0])
-        self.distance = 0
 
-    def get_distance(self):
+    def total_distance(self):
         # Loop over cities in route and calculate route distance
         for i, city in enumerate(self.route[:-1]):
             # print(city, self.route[i + 1])

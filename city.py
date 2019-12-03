@@ -1,7 +1,7 @@
 from math import pow, sqrt
 
 
-class City:  # (Gene)
+class City:
     def __init__(self, id, x, y):
         # Definition for cities coordinates
         self.id = id
