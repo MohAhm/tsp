@@ -18,7 +18,6 @@ class Route:
     def total_distance(self):
         # Loop over cities in route and calculate route distance
         for i, city in enumerate(self.route[:-1]):
-            # print(city, self.route[i + 1])
             self.distance += city.distance_from(self.route[i + 1])
 
         return self.distance

@@ -1,4 +1,4 @@
-import numpy as np
+import random
 
 
 class Chromosome:
@@ -11,8 +11,9 @@ class Chromosome:
             self.chromosome.append(i)
 
         # Randomize the initial chromosome except the starting city/point
-        self.chromosome = np.array(self.chromosome)
-        np.random.shuffle(self.chromosome[1:])
+        tmp = self.chromosome[1:]
+        random.shuffle(tmp)
+        self.chromosome[1:] = tmp
 
     def get_chromosome(self):
         return self.chromosome
@@ -22,10 +23,3 @@ class Chromosome:
 
     def get_fitness(self):
         return self.fitness
-
-    def unique(self):
-        # Checks if all the elements in a list are unique
-        if len(self.chromosome) == len(set(self.chromosome)):
-            return True
-        else:
-            return False
