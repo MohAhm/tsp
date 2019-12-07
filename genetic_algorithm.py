@@ -1,15 +1,15 @@
 from population import Population
+from chromosome import Chromosome
 from route import Route
 import random
 
 
 class GeneticAlgorithm:
-    def __init__(self, population_size, mutation_rate, crossover_rate, elitism_count, tournament_size):
+    def __init__(self, population_size, tournament_size, crossover_rate, mutation_rate):
         self.population_size = population_size
-        self.mutation_rate = mutation_rate
-        self.crossover_rate = crossover_rate
-        self.elitism_count = elitism_count
         self.tournament_size = tournament_size
+        self.crossover_rate = crossover_rate
+        self.mutation_rate = mutation_rate
 
     def init_population(self, chromosome_length):
         population = Population(self.population_size, chromosome_length)
@@ -21,10 +21,13 @@ class GeneticAlgorithm:
             route = Route(chromosome, cities)
             chromosome.set_fitness(route.total_distance())
 
+    def eval_fitness(self, population):
+        return population.elitism_sort()
+
     def tournament_selection(self, population):
         # Randomly selected a set of chromosomes from the population
         # then return the chromosome with the highest fitness
-        tournament = Population()
+        tournament = Population(self.tournament_size)
 
         i = 0
         while i < self.tournament_size:
@@ -32,10 +35,45 @@ class GeneticAlgorithm:
 
             if chromosome not in tournament.get_population():
                 # Prevent duplicate chromosomes
-                tournament.set_chromosome(chromosome)
+                tournament.set_chromosome(i, chromosome)
                 i += 1
 
-        # for chromosome in tournament.get_population():
-        #     print(chromosome.get_fitness())
-
         return tournament.get_fittest()
+
+    def order_crossover(self, parent1, parent2, chromosome_length):
+        # Crossover probability
+        if self.crossover_rate > random.random():
+            offspring = Chromosome(chromosome_length, False)
+
+            # Select two random subset points from first parent
+            pot1 = random.randrange(chromosome_length)
+            pot2 = random.randrange(chromosome_length)
+
+            # The indices shouldn't be same
+            while (pot1 == pot2):
+                pot1 = random.randrange(chromosome_length)
+                pot2 = random.randrange(chromosome_length)
+
+            # Make the smaller the start point and the larger the end point
+            start = min(pot1, pot2)
+            end = max(pot1, pot2)
+
+            # Copy the subset between the points from the first parent
+            # to the offspring
+            for i in range(start, end + 1):
+                offspring.set_gene(i, parent1.get_gene(i))
+
+            # Copy the remaining unused subset from the second parent
+            # to the offspring
+            i = 0
+            for gene in parent2.get_chromosome():
+                while gene not in offspring.get_chromosome():
+                    # find empty index
+                    if offspring.get_gene(i) == -1:
+                        offspring.set_gene(i, gene)
+
+                    i += 1
+
+            return offspring
+
+        return parent1

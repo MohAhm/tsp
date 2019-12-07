@@ -1,13 +1,15 @@
-import time
-
 from genetic_algorithm import GeneticAlgorithm
 from city import City
 from route import Route
 
 POPULATION_SIZE = 50
-MUTATION_RATE = 0.01
-CROSSOVER_RATE = 0.8
 TOURNAMENT_SIZE = 5
+CROSSOVER_RATE = 0.8    # 80%
+MUTATION_RATE = 0.15    # 15%
+
+ELITISM = 2     # must be even number
+
+GENERATIONS_MAX = 5  # tmp
 
 data = [
     (565.0, 575.0), (25.0, 185.0),
@@ -24,38 +26,64 @@ def main():
     for i, axis in enumerate(data, 1):
         cities.append(City(i, axis[0], axis[1]))
 
+    chromosome_length = len(data)
+
     # 2 Create GA object
-    ga = GeneticAlgorithm(POPULATION_SIZE, MUTATION_RATE,
-                          CROSSOVER_RATE, 0, TOURNAMENT_SIZE)
+    ga = GeneticAlgorithm(POPULATION_SIZE, TOURNAMENT_SIZE,
+                          CROSSOVER_RATE, MUTATION_RATE)
 
     # 3 Initialize population
-    initial_population = ga.init_population(len(data))
+    population = ga.init_population(chromosome_length)
+    # Set the fitness F(x) for each chromosome
+    ga.calc_fitness(population, cities)
 
-    # start_time = time.time()
-    ga.calc_fitness(initial_population, cities)
-    # end_time = time.time()
-    # time_taken = (end_time - start_time)*(10**6)
-    # print("Time taken for calculating fitness:", time_taken)
+    generation = 1
+    while GENERATIONS_MAX > generation:
+        print('Generation: ', generation)
 
-    # start_time = time.time()
-    fittest = initial_population.get_fittest()
-    print('Fittest: ', fittest.get_fitness())
-    print('Chromosome: ', fittest.get_chromosome())
-    # end_time = time.time()
-    # time_taken = (end_time - start_time)*(10**6)
-    # print("Time taken for getting the fittest:", time_taken)
+        # Evaluate the fitness F(x) of the population
+        ga.eval_fitness(population)
 
-    # route = Route(fittest, cities)
-    # print('Fittest: ', fittest.get_fitness())
-    # print('Route: ', route, ' Fittest: ', fittest.get_fitness())
+        fittest = population.get_fittest()
+        route = Route(fittest, cities)
+        print('Route: ', route, ' Fitness: ', fittest.get_fitness())
 
-    # for chromosome in initial_population.get_population():
+        # Ignore elite chromosomes, which are the two first indices
+        it = iter(range(ELITISM, POPULATION_SIZE))
+        # Loop over current population
+        for i in it:
+            # Select two chromosomes
+            parent1 = ga.tournament_selection(population)
+            parent2 = ga.tournament_selection(population)
+
+        #   Apply crossover
+        #       Create two new offspring from the two selected chromosomes
+        #       Otherwise return the parent back
+            offspring1 = ga.order_crossover(
+                parent1, parent2, chromosome_length)
+            offspring2 = ga.order_crossover(
+                parent2, parent1, chromosome_length)
+
+        #   Mutate the two chromosomes
+
+        #   Set fitness
+            route = Route(offspring1, cities)
+            offspring1.set_fitness(route.total_distance())
+            route = Route(offspring2, cities)
+            offspring2.set_fitness(route.total_distance())
+
+            # print('Offspring1:', offspring1.get_fitness())
+            # print('Offspring2:', offspring2.get_fitness())
+
+        #   Place the resulting chromosomes into the population
+            population.set_chromosome(i, offspring1)
+            population.set_chromosome(next(it), offspring2)
+
+        generation += 1
+
+    # for chromosome in population.get_population():
     #     route = Route(chromosome, cities)
     #     print('Route: ', route, ' Fitness: ', chromosome.get_fitness())
-
-    parent = ga.tournament_selection(initial_population)
-    print('Fittest: ', parent.get_fitness())
-    print('Chromosome: ', parent.get_chromosome())
 
 
 if __name__ == '__main__':

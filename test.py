@@ -1,61 +1,54 @@
-# import numpy as np
 import random
 
-# lst = [4, 3, 5, 1, 2]
+parent1 = list(range(1, 15))
+parent2 = list(range(1, 15))
 
-# print(min(lst))
-
-# for i, num in enumerate(lst[:-1]):
-#     test = min(num, lst[i + 1])
-
-# print(test)
-
-# test = lst[0]
-
-# for i in lst:
-#     if i < test:
-#         test = i
-
-# print(test)
-
-
-# lst = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-# a = np.random.choice(lst)
-# print(a)
-
-
-# tournament = []
-# tournament_size = 5
-# i = 0
-
-# while i < tournament_size:
-#     a = random.choice(lst)
-
-#     if a not in tournament:
-#         tournament.append(a)
-#         i += 1
-
-# print(tournament)
-
-
-# num = 0
-
-# if num:
-#     print('Good')
-
-
-# population = np.empty(5, dtype=object)
-# print(population)
-
-# population = np.append(population, 1)
-# print(population)
-
-
-lst = list(range(60))
-# random.shuffle(lst[1:])
-
-tmp = lst[1:]
+tmp = parent2[1:]
 random.shuffle(tmp)
-lst[1:] = tmp
+parent2[1:] = tmp
 
-print(lst)
+offspring = [-1] * len(parent1)
+
+print('Parent1: ', parent1)
+print('Parent2: ', parent2)
+print('Offspring init: ', offspring)
+
+pos1 = random.randrange(len(parent1))
+pos2 = random.randrange(len(parent1))
+
+# Rules: The indexes shouldn't be the same
+while (pos1 == pos2):
+    pos1 = random.randrange(len(parent1))
+    pos2 = random.randrange(len(parent1))
+
+# print(pos1)
+# print(pos2)
+
+start = min(pos1, pos2)
+end = max(pos1, pos2)
+
+print("Start: ", start)
+print("End: ", end)
+
+
+for idx in range(start, end + 1):
+
+    # print('i: ', i)
+    # print('num: ', num)
+    offspring[idx] = parent1[idx]
+
+print('Offspring+(p1): ', offspring)
+
+# t1 = [i for i, e in enumerate(offspring) if e == 0]
+# print(t1)
+
+i = 0
+for city in parent2:
+    while city not in offspring:
+        # find empty index
+        if offspring[i] == -1:
+            offspring[i] = city
+
+        i += 1
+
+print('Offspring+(p2): ', offspring)
