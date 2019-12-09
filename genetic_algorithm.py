@@ -52,10 +52,6 @@ class GeneticAlgorithm:
             pot1 = random.randrange(offspring.get_length())
             pot2 = random.randrange(offspring.get_length())
 
-            # print('Parent1: ', parent1.get_chromosome())
-            # print('Parent2: ', parent2.get_chromosome())
-            # print('Offspring init: ', offspring.get_chromosome())
-
             # The two positions shouldn't be same
             while (pot1 == pot2):
                 pot1 = random.randrange(offspring.get_length())
@@ -66,15 +62,10 @@ class GeneticAlgorithm:
             start = min(pot1, pot2)
             end = max(pot1, pot2)
 
-            # print("Start: ", start)
-            # print("End: ", end)
-
             # Copy the subset between the points from the first parent
             # to the offspring
             for i in range(start, end + 1):
                 offspring.set_gene(i, parent1.get_gene(i))
-
-            # print('Offspring+(p1): ', offspring.get_chromosome())
 
             # Copy the remaining unused subset from the second parent
             # to the offspring
@@ -86,8 +77,6 @@ class GeneticAlgorithm:
                         offspring.set_gene(i, gene)
 
                     i += 1
-
-            # print('Offspring+(p2): ', offspring.get_chromosome())
         else:
             # Otherwise create a new offspring identical
             # to the parent
@@ -96,35 +85,9 @@ class GeneticAlgorithm:
 
         return offspring
 
-        # return parent1
-
     def swap_mutation(self, offspring):
-
-        # for i in range(1, offspring.get_length()):
-        #     if self.mutation_rate > random.random():
-        #         # print('Offspring (init): ', offspring.get_chromosome())
-
-        #         pos = random.randrange(offspring.get_length())
-
-        #         while (i == pos) or (pos == 0):
-        #             pos = random.randrange(offspring.get_length())
-
-        #         # Get genes to swap
-        #         gene1 = offspring.get_gene(i)
-        #         gene2 = offspring.get_gene(pos)
-
-        #         # Swap genes
-        #         offspring.set_gene(pos, gene1)
-        #         offspring.set_gene(i, gene2)
-
-        #         # print('Offspring (muta): ', offspring.get_chromosome())
-
-        # return offspring
-
         # Mutation probability
         if self.mutation_rate > random.random():
-            # print('Offspring (init): ', offspring.get_chromosome())
-
             # Select two random positions
             pos1 = random.randrange(offspring.get_length())
             pos2 = random.randrange(offspring.get_length())
@@ -135,9 +98,6 @@ class GeneticAlgorithm:
                 pos1 = random.randrange(offspring.get_length())
                 pos2 = random.randrange(offspring.get_length())
 
-            # print(pos1)
-            # print(pos2)
-
             # Get genes to swap
             gene1 = offspring.get_gene(pos1)
             gene2 = offspring.get_gene(pos2)
@@ -145,7 +105,5 @@ class GeneticAlgorithm:
             # Swap genes
             offspring.set_gene(pos2, gene1)
             offspring.set_gene(pos1, gene2)
-
-            # print('Offspring (muta): ', offspring.get_chromosome())
 
         return offspring

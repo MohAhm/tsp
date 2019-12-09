@@ -9,7 +9,7 @@ MUTATION_RATE = 0.1    # 10%
 
 ELITISM = 2     # must be even number
 
-GENERATIONS_MAX = 3000  # tmp
+TERMINATION = 1000
 
 data = [
     (565.0, 575.0), (25.0, 185.0),
@@ -23,34 +23,47 @@ data = [
 def main():
     """ EntryPoint """
 
-    # 1 Create list of cities
+    # Create list of cities
     cities = []
     for i, axis in enumerate(data, 1):
         cities.append(City(i, axis[0], axis[1]))
 
-    # 2 Create GA object
+    # Create GA object
     ga = GeneticAlgorithm(POPULATION_SIZE, TOURNAMENT_SIZE,
                           CROSSOVER_RATE, MUTATION_RATE)
 
-    # 3 Initialize population
+    # Initialize population
     population = ga.init_population(len(data))
     # Set the fitness F(x) for each chromosome
     ga.calc_fitness(population, cities)
 
-    generation = 1
-    while GENERATIONS_MAX > generation:
-        # print('Generation: ', generation)
+    similarity = 0
+    generation = 0
+    while True:
+        print('Generation: ', generation)
+
+        previous_fittest = population.get_fittest()
 
         # Evaluate the fitness F(x) of the population
         population = ga.eval_fitness(population)
 
-        # for chromosome in population.get_population():
-        #     route = Route(chromosome, cities)
-        #     print('Distance: ', route.total_distance())
+        current_fittest = population.get_fittest()
 
-        fittest = population.get_fittest()
-        route = Route(fittest, cities)
-        print('Best distance: ', route.total_distance())
+        if current_fittest.get_fitness() == previous_fittest.get_fitness():
+            # If there has been no improvement in the fittest solution,
+            # increment the counter
+            similarity += 1
+        else:
+            # Otherwise, if there are improvement reset the counter
+            similarity = 0
+
+        # Termination condition:
+        # If the fitness value does not improve for a considerable
+        # amount of time
+        if similarity == TERMINATION:
+            break
+
+        print('Best distance: ', current_fittest.get_fitness())
 
         # Skipp elite chromosomes, which are the two first indices
         it = iter(range(ELITISM, POPULATION_SIZE))
@@ -60,22 +73,21 @@ def main():
             parent1 = ga.tournament_selection(population)
             parent2 = ga.tournament_selection(population)
 
-        #   Apply crossover
+            # Apply crossover
             offspring1 = ga.order_crossover(parent1, parent2)
             offspring2 = ga.order_crossover(parent2, parent1)
 
-        #   Mutate the two chromosomes
+            # Mutate the two chromosomes
             offspring1 = ga.swap_mutation(offspring1)
             offspring2 = ga.swap_mutation(offspring2)
 
-        #   Set fitness
+            # Set fitness
             route1 = Route(offspring1, cities)
             offspring1.set_fitness(route1.total_distance())
             route2 = Route(offspring2, cities)
             offspring2.set_fitness(route2.total_distance())
 
-        #   Place the resulting chromosomes into the population
-            # print(i, next(it))
+            # Place the resulting chromosomes into the population
             population.set_chromosome(i, offspring1)
             population.set_chromosome(next(it), offspring2)
 
@@ -84,7 +96,7 @@ def main():
     fittest = population.get_fittest()
     route = Route(fittest, cities)
     print('The Best distance: ', route.total_distance())
-    print('Route: ', route)
+    print('Shortest route: ', route)
 
 
 if __name__ == '__main__':
