@@ -19,6 +19,9 @@ class Chromosome:
     def get_chromosome(self):
         return self.chromosome
 
+    def get_length(self):
+        return len(self.chromosome)
+
     def set_fitness(self, fitness):
         self.fitness = fitness
 

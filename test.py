@@ -1,54 +1,45 @@
 import random
 
-parent1 = list(range(1, 15))
-parent2 = list(range(1, 15))
+mutationRate = 0.15
 
-tmp = parent2[1:]
+
+offspring = list(range(1, 15))
+tmp = offspring[1:]
 random.shuffle(tmp)
-parent2[1:] = tmp
+offspring[1:] = tmp
 
-offspring = [-1] * len(parent1)
-
-print('Parent1: ', parent1)
-print('Parent2: ', parent2)
-print('Offspring init: ', offspring)
-
-pos1 = random.randrange(len(parent1))
-pos2 = random.randrange(len(parent1))
-
-# Rules: The indexes shouldn't be the same
-while (pos1 == pos2):
-    pos1 = random.randrange(len(parent1))
-    pos2 = random.randrange(len(parent1))
-
-# print(pos1)
-# print(pos2)
-
-start = min(pos1, pos2)
-end = max(pos1, pos2)
-
-print("Start: ", start)
-print("End: ", end)
+print('Offspring: ', offspring)
 
 
-for idx in range(start, end + 1):
+for i in range(1, len(offspring)):
+    # Get new gene position
+    r = random.random()
+    if mutationRate > r:
+        pos = random.randrange(len(offspring))
+        while (i == pos) or (pos == 0):
+            pos = random.randrange(len(offspring))
+        # Get genes to swap
+        print(i, pos)
+        offspring[i], offspring[pos] = offspring[pos], offspring[i]
+        print(r)
 
-    # print('i: ', i)
-    # print('num: ', num)
-    offspring[idx] = parent1[idx]
+print('Offspring: ', offspring)
 
-print('Offspring+(p1): ', offspring)
 
-# t1 = [i for i, e in enumerate(offspring) if e == 0]
-# print(t1)
+# r = random.random()
+# if mutationRate > r:
+#     pos1 = random.randrange(len(offspring))
+#     pos2 = random.randrange(len(offspring))
 
-i = 0
-for city in parent2:
-    while city not in offspring:
-        # find empty index
-        if offspring[i] == -1:
-            offspring[i] = city
+#     # Rules: The indexes shouldn't be the same
+#     while (pos1 == pos2) or (pos1 == 0) or (pos2 == 0):
+#         pos1 = random.randrange(len(offspring))
+#         pos2 = random.randrange(len(offspring))
 
-        i += 1
+#     print(pos1)
+#     print(pos2)
 
-print('Offspring+(p2): ', offspring)
+#     offspring[pos2], offspring[pos1] = offspring[pos1], offspring[pos2]
+
+# print('Offspring: ', offspring)
+# print(r)

@@ -20,8 +20,8 @@ class Population:
     def evaluation(self, chromosome):
         return chromosome.get_fitness()
 
-    def get_fittest(self):
-        return min(self.population, key=self.evaluation)
-
     def elitism_sort(self):
         self.population = sorted(self.population, key=self.evaluation)
+
+    def get_fittest(self):
+        return self.population[0]
