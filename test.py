@@ -1,45 +1,91 @@
 import random
 
-mutationRate = 0.15
+parent1 = list(range(15))
+parent2 = list(range(15))
 
-
-offspring = list(range(1, 15))
-tmp = offspring[1:]
+tmp = parent2[1:]
 random.shuffle(tmp)
-offspring[1:] = tmp
+parent2[1:] = tmp
 
-print('Offspring: ', offspring)
+offspring1 = [-1] * len(parent1)
+offspring2 = [-1] * len(parent1)
+
+print('Parent1: ', parent1)
+print('Parent2: ', parent2)
+print('Offspring init: ', offspring1)
+print('Offspring init: ', offspring2)
+
+pos1 = random.randrange(len(parent1))
+pos2 = random.randrange(len(parent1))
+
+# Rules: The indexes shouldn't be the same
+while (pos1 == pos2):
+    pos1 = random.randrange(len(parent1))
+    pos2 = random.randrange(len(parent1))
+
+# print(pos1)
+# print(pos2)
+
+start = min(pos1, pos2)
+end = max(pos1, pos2)
+end = end + 1
+
+print("Start: ", start)
+print("End: ", end)
+
+for idx in range(start, end):
+    offspring1[idx] = parent1[idx]
+
+for idx in range(start, end):
+    offspring2[idx] = parent1[idx]
+
+print('Offspring+(p1): ', offspring1)
+print('Offspring+(p1): ', offspring2)
+
+# t1 = [i for i, e in enumerate(offspring1) if e == 0]
+# print(t1)
+
+i = 0
+for city in parent2:
+    while city not in offspring1:
+        # find empty index
+        if offspring1[i] == -1:
+            offspring1[i] = city
+
+        i += 1
+
+# print('Length: ', len(parent2))
+
+# for i in range(len(parent2)):
+#     gene = i + end
+#     city = parent2[i]
+
+#     print(gene)
+
+#     while city not in offspring1:
+#         if gene >= len(parent2):
+#             gene -= len(parent2)
+
+#         if offspring1[gene] == -1:
+#             offspring1[gene] = city
+
+#         gene += 1
+
+offspring2[0] = 0
+for i in range(len(parent2)):
+    gene = i + end
+
+    if gene >= len(parent2):
+        gene -= len(parent2)
+
+    # print(gene)
+
+    if parent2[gene] not in offspring2:
+        for j in range(len(offspring2)):
+            if offspring2[j] == -1:
+                offspring2[j] = parent2[gene]
+                break
 
 
-for i in range(1, len(offspring)):
-    # Get new gene position
-    r = random.random()
-    if mutationRate > r:
-        pos = random.randrange(len(offspring))
-        while (i == pos) or (pos == 0):
-            pos = random.randrange(len(offspring))
-        # Get genes to swap
-        print(i, pos)
-        offspring[i], offspring[pos] = offspring[pos], offspring[i]
-        print(r)
-
-print('Offspring: ', offspring)
-
-
-# r = random.random()
-# if mutationRate > r:
-#     pos1 = random.randrange(len(offspring))
-#     pos2 = random.randrange(len(offspring))
-
-#     # Rules: The indexes shouldn't be the same
-#     while (pos1 == pos2) or (pos1 == 0) or (pos2 == 0):
-#         pos1 = random.randrange(len(offspring))
-#         pos2 = random.randrange(len(offspring))
-
-#     print(pos1)
-#     print(pos2)
-
-#     offspring[pos2], offspring[pos1] = offspring[pos1], offspring[pos2]
-
-# print('Offspring: ', offspring)
-# print(r)
+print('Offspring+(p2): ', offspring1)
+print('Offspring+(p2): ', offspring2)

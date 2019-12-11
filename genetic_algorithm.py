@@ -43,40 +43,55 @@ class GeneticAlgorithm:
 
     def order_crossover(self, parent1, parent2):
         offspring = Chromosome(parent1.get_length(), False)
+        chromosome_length = offspring.get_length()
 
         # Crossover probability
         if self.crossover_rate > random.random():
-            # Create an offspring from the two selected chromosomes
+            # Create an offspring from the selected chromosomes
 
             # Select two random subset points from first parent
-            pot1 = random.randrange(offspring.get_length())
-            pot2 = random.randrange(offspring.get_length())
+            pot1 = random.randrange(chromosome_length)
+            pot2 = random.randrange(chromosome_length)
 
             # The two positions shouldn't be same
             while (pot1 == pot2):
-                pot1 = random.randrange(offspring.get_length())
-                pot2 = random.randrange(offspring.get_length())
+                pot1 = random.randrange(chromosome_length)
+                pot2 = random.randrange(chromosome_length)
 
             # Make the smaller one start point and
             # the larger one end point
             start = min(pot1, pot2)
             end = max(pot1, pot2)
+            end = end + 1
 
             # Copy the subset between the points from the first parent
             # to the offspring
-            for i in range(start, end + 1):
+            for i in range(start, end):
                 offspring.set_gene(i, parent1.get_gene(i))
 
             # Copy the remaining unused subset from the second parent
             # to the offspring
-            i = 0
-            for gene in parent2.get_chromosome():
-                while gene not in offspring.get_chromosome():
-                    # find empty index
-                    if offspring.get_gene(i) == -1:
-                        offspring.set_gene(i, gene)
+            # i = 0
+            # for gene in parent2.get_chromosome():
+            #     while gene not in offspring.get_chromosome():
+            #         # find empty index
+            #         if offspring.get_gene(i) == -1:
+            #             offspring.set_gene(i, gene)
 
-                    i += 1
+            #         i += 1
+
+            offspring.set_gene(0, 0)
+            for i in range((parent2.get_length())):
+                gene = i + end
+
+                if gene >= parent2.get_length():
+                    gene -= parent2.get_length()
+
+                if parent2.get_gene(gene) not in offspring.get_chromosome():
+                    for j in range(offspring.get_length()):
+                        if offspring.get_gene(j) == -1:
+                            offspring.set_gene(j, parent2.get_gene(gene))
+                            break
         else:
             # Otherwise create a new offspring identical
             # to the parent
@@ -86,17 +101,37 @@ class GeneticAlgorithm:
         return offspring
 
     def swap_mutation(self, offspring):
+        chromosome_length = offspring.get_length()
+
+        # for i in range(1, chromosome_length):
+        #     if self.mutation_rate > random.random():
+
+        #         pos = random.randrange(chromosome_length)
+
+        #         while (i == pos) or (pos == 0):
+        #             pos = random.randrange(chromosome_length)
+
+        #         # Get genes to swap
+        #         gene1 = offspring.get_gene(i)
+        #         gene2 = offspring.get_gene(pos)
+
+        #         # Swap genes
+        #         offspring.set_gene(pos, gene1)
+        #         offspring.set_gene(i, gene2)
+
+        # return offspring
+
         # Mutation probability
         if self.mutation_rate > random.random():
             # Select two random positions
-            pos1 = random.randrange(offspring.get_length())
-            pos2 = random.randrange(offspring.get_length())
+            pos1 = random.randrange(chromosome_length)
+            pos2 = random.randrange(chromosome_length)
 
             # The positions shouldn't be same,
             # and shouldn't be same first index
             while (pos1 == pos2) or (pos1 == 0) or (pos2 == 0):
-                pos1 = random.randrange(offspring.get_length())
-                pos2 = random.randrange(offspring.get_length())
+                pos1 = random.randrange(chromosome_length)
+                pos2 = random.randrange(chromosome_length)
 
             # Get genes to swap
             gene1 = offspring.get_gene(pos1)
