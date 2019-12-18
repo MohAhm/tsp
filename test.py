@@ -27,8 +27,8 @@ while (pos1 == pos2):
 # print(pos2)
 
 start = min(pos1, pos2)
-end = max(pos1, pos2)
-end = end + 1
+end = max(pos1, pos2) + 1
+# end = end + 1
 
 print("Start: ", start)
 print("End: ", end)

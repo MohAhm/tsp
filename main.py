@@ -11,13 +11,6 @@ ELITISM = 24
 
 # TERMINATION = 3000
 
-# The Best distance:  8080.491061833102
-# Shortest route:  (1)->(18)->(3)->(17)->(7)->(2)->(42)->(21)->
-# (31)->(22)->(49)->(32)->(45)->(19)->(41)->(8)->(9)->(10)->(43)->
-# (33)->(51)->(11)->(52)->(14)->(13)->(47)->(26)->(27)->(28)->(12)
-# ->(25)->(4)->(37)->(34)->(35)->(36)->(39)->(40)->(38)->(5)->(15)
-# ->(6)->(24)->(48)->(46)->(16)->(29)->(30)->(23)->(20)->(50)->(44)->(1)
-
 
 def read_file(filename):
     file_object = open(filename)
@@ -54,14 +47,12 @@ def main():
 
     # Initialize population
     population = ga.init_population(len(data))
-    # Set the fitness F(x) for each chromosome
+    # Set the fitness for each chromosome
     ga.calc_fitness(population, cities)
 
     # similarity = 0
     generation = 0
     while True:
-        print('Generation: ', generation)
-
         # previous_fittest = population.get_fittest()
 
         # Evaluate the fitness F(x) of the population
@@ -85,7 +76,10 @@ def main():
         if 9000 > current_fittest.get_fitness():
             break
 
+        print('Generation: ', generation)
         print('Best distance: ', current_fittest.get_fitness())
+
+        # print(generation, ' ', current_fittest.get_fitness())
 
         # Skipp elite chromosomes
         it = iter(range(ELITISM, POPULATION_SIZE))
@@ -119,7 +113,7 @@ def main():
     route = Route(fittest, cities)
     print('The Best distance: ', route.total_distance())
     print('Shortest route: ', route)
-    print('Chromosome: ', fittest.get_chromosome())
+    # print('Chromosome: ', fittest.get_chromosome())
 
 
 if __name__ == '__main__':

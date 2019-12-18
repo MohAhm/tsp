@@ -9,8 +9,9 @@ class Route:
 
         # Build an array of city objects in the order
         # of the chromosome
-        for i in range(len(chromosome.get_chromosome())):
-            self.route.append(cities[chromosome.get_chromosome()[i]])
+        for i in range(chromosome.get_length()):
+            gene = chromosome.get_gene(i)
+            self.route.append(cities[gene])
 
         # Add ending point which is the starting city to the route
         self.route.append(self.route[0])
