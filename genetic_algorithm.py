@@ -27,18 +27,16 @@ class GeneticAlgorithm:
 
     def tournament_selection(self, population):
         # Randomly selected a set of chromosomes from the population
-        # then return the chromosome with the highest fitness
+        # then return the chromosome with the best fitness
+
         tournament = Population(self.tournament_size)
+        chromosomes = random.sample(
+            population.get_population(), self.tournament_size)
 
-        i = 0
-        while i < self.tournament_size:
-            chromosome = random.choice(population.get_population())
+        for i in range(self.tournament_size):
+            tournament.set_chromosome(i, chromosomes[i])
 
-            if chromosome not in tournament.get_population():
-                # Prevent duplicate chromosomes
-                tournament.set_chromosome(i, chromosome)
-                i += 1
-
+        tournament = self.eval_fitness(tournament)
         return tournament.get_fittest()
 
     def order_crossover(self, parent1, parent2):

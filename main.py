@@ -1,15 +1,13 @@
+import matplotlib.pyplot as plt
 from genetic_algorithm import GeneticAlgorithm
 from city import City
 from route import Route
 
 POPULATION_SIZE = 50
-TOURNAMENT_SIZE = 5
-CROSSOVER_RATE = 0.8
-MUTATION_RATE = 0.2
-
-ELITISM = 24
-
-# TERMINATION = 3000
+TOURNAMENT_SIZE = 10
+CROSSOVER_RATE = 0.9
+MUTATION_RATE = 0.7
+ELITISM = 2
 
 
 def read_file(filename):
@@ -32,9 +30,11 @@ def read_file(filename):
 
 def main():
     """ EntryPoint """
+    generations_plt = []
+    fittest_plt = []
 
     # Read data from a file
-    data = read_file('Assignment 3 berlin52.tsp')
+    data = read_file('berlin52.tsp')
 
     # Create list of cities
     cities = []
@@ -49,38 +49,11 @@ def main():
     population = ga.init_population(len(data))
     # Set the fitness for each chromosome
     ga.calc_fitness(population, cities)
+    population = ga.eval_fitness(population)
+    fittest = population.get_fittest()
 
-    # similarity = 0
     generation = 0
-    while True:
-        # previous_fittest = population.get_fittest()
-
-        # Evaluate the fitness F(x) of the population
-        population = ga.eval_fitness(population)
-        current_fittest = population.get_fittest()
-
-        # if current_fittest.get_fitness() == previous_fittest.get_fitness():
-        #     # If there has been no improvement in the fittest solution,
-        #     # increment the counter
-        #     similarity += 1
-        # else:
-        #     # Otherwise, if there are improvement reset the counter
-        #     similarity = 0
-
-        # # Termination condition:
-        # # If the fitness value does not improve for a considerable
-        # # amount of time
-        # if similarity == TERMINATION:
-        #     break
-
-        if 9000 > current_fittest.get_fitness():
-            break
-
-        print('Generation: ', generation)
-        print('Best distance: ', current_fittest.get_fitness())
-
-        # print(generation, ' ', current_fittest.get_fitness())
-
+    while 9000 < fittest.get_fitness():
         # Skipp elite chromosomes
         it = iter(range(ELITISM, POPULATION_SIZE))
         # Loop over current population
@@ -108,6 +81,15 @@ def main():
             population.set_chromosome(next(it), offspring2)
 
         generation += 1
+        generations_plt.append(generation)
+
+        # Evaluate the fitness F(x) of the population
+        population = ga.eval_fitness(population)
+        fittest = population.get_fittest()
+        fittest_plt.append(fittest.get_fitness())
+
+        print('Generation: ', generation)
+        print('Best distance: ', fittest.get_fitness())
 
     fittest = population.get_fittest()
     route = Route(fittest, cities)
@@ -115,6 +97,10 @@ def main():
     print('Shortest route: ', route)
     # print('Chromosome: ', fittest.get_chromosome())
 
+    plt.plot(generations_plt, fittest_plt)
+    plt.xlabel('Generations')
+    plt.ylabel('Best Distance')
+    plt.show()
 
 if __name__ == '__main__':
     main()
